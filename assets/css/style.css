@@ -1,3 +1,7 @@
+body {
+    background-image: url('../imgs/bg1.jpeg');
+}
+
 article {
     margin: 0 auto;
     margin-top: 20px;

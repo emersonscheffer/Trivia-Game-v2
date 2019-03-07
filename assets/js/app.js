@@ -7,6 +7,7 @@ var questions = [
         a3: 346,
         a4: 366,
         correct: 4,
+        image: "year",
         correctAnswer: 366
     },
     question2 = {
@@ -16,6 +17,7 @@ var questions = [
         a3: "Oasis",
         a4: "The Beatles",
         correct: 3,
+        image: "oasis",
         correctAnswer: "Oasis"
     },
     question3 = {
@@ -25,6 +27,7 @@ var questions = [
         a3: "Heat",
         a4: "Constantine",
         correctAnswer: "Heat",
+        image: "keanu reeves",
         correct: 3
     },
     question4 = {
@@ -33,6 +36,7 @@ var questions = [
         a2: "Peru",
         a3: "Argentina",
         a4: "Bolivia",
+        image: "peru",
         correctAnswer: "Peru",
         correct: 2
     },
@@ -42,6 +46,7 @@ var questions = [
         a2: "Basketball",
         a3: "Soccer",
         a4: "Golf",
+        image: "shaquille o'neal",
         correctAnswer: "Basketball",
         correct: 2
     },
@@ -51,6 +56,7 @@ var questions = [
         a2: "2.61828182846",
         a3: "2.71828182846",
         a4: "3.71828182846",
+        image: "mathematics",
         correctAnswer: "2.71828182846",
         correct: 3
     },
@@ -60,6 +66,7 @@ var questions = [
         a2: "Ireland",
         a3: "Scotland",
         a4: "England",
+        image: "uk",
         correctAnswer: "Ireland",
         correct: 2
     },
@@ -69,6 +76,7 @@ var questions = [
         a2: "64.03 * 6",
         a3: "32.57 * 100",
         a4: "none of the above",
+        image: "mathematics",
         correctAnswer: "65.15 * 5",
         correct: 1
     },
@@ -132,6 +140,9 @@ $('.btnStart').on('click', function () {
 })
 
 
+var queryURL = "https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=cats";
+
+
 //validating answers
 // timer number 2
 var timerShowingScreen;
@@ -151,6 +162,26 @@ function outTimeFunction() {
         $('.answerResult').text("Out of Time!");
         $('.correting').text("The correct answer was: " + questions[counter - 1].correctAnswer);
 
+
+        queryURL = "https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=" + questions[counter - 1].image;
+
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).then(function (response) {
+
+            var imageUrl = response.data.image_original_url;
+
+            var imageHolder = $("<img>");
+
+            imageHolder.attr("src", imageUrl);
+            imageHolder.attr("alt", "cat image");
+            imageHolder.css('width', '300px');
+
+            $("#images").html(imageHolder);
+
+        });
+
         timerCD = 10;
 
         timerShowingScreen = setInterval(function () {
@@ -165,7 +196,7 @@ function outTimeFunction() {
 
                 clearInterval(timerShowingScreen);
             },
-            3000);
+            5000);
 
     } else {
         scoreBoard();
@@ -186,6 +217,25 @@ function correctAnswerFunction() {
         $('.answerResult').text("Correct !");
         $('.correting').text(" ");
 
+        queryURL = "https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=" + questions[counter - 1].image;
+
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).then(function (response) {
+
+            var imageUrl = response.data.image_original_url;
+
+            var imageHolder = $("<img>");
+
+            imageHolder.attr("src", imageUrl);
+            imageHolder.attr("alt", "cat image");
+            imageHolder.css('width', '300px');
+
+            $("#images").html(imageHolder);
+
+        });
+
         timerShowingScreen = setInterval(function () {
 
                 timerCD = 10;
@@ -200,7 +250,7 @@ function correctAnswerFunction() {
 
                 clearInterval(timerShowingScreen);
             },
-            3000);
+            5000);
     } else {
         scoreBoard();
     }
@@ -220,6 +270,27 @@ function incorrectAnswerFunction() {
         $('.answerResult').text("Nope!");
         $('.correting').text("The correct answer is: " + questions[counter - 1].correctAnswer);
 
+
+        queryURL = "https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=" + questions[counter - 1].image;
+
+        $.ajax({
+            url: queryURL,
+            method: "GET"
+        }).then(function (response) {
+
+            var imageUrl = response.data.image_original_url;
+
+            var imageHolder = $("<img>");
+
+            imageHolder.attr("src", imageUrl);
+            imageHolder.attr("alt", "cat image");
+            imageHolder.css('width', '300px');
+
+            $("#images").html(imageHolder);
+
+        });
+
+
         timerShowingScreen = setInterval(function () {
                 timerCD = 10;
 
@@ -233,7 +304,7 @@ function incorrectAnswerFunction() {
 
                 clearInterval(timerShowingScreen);
             },
-            3000);
+            5000);
 
     } else {
         scoreBoard();
@@ -302,3 +373,17 @@ $('#btnA4').on('click', function () {
     answer = 4;
     checkAnswer();
 });
+
+var bgCounter = 1;
+
+setInterval(function(){
+
+    if(bgCounter < 5){
+        $('body').css('backgroundImage', 'url(./assets/imgs/bg' + bgCounter + '.jpg)');
+        
+    } else {
+        bgCounter = 1;
+    }
+    bgCounter++;
+
+}, 1000);
