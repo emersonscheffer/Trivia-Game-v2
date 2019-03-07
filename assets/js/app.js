@@ -6,7 +6,8 @@ var questions = [
         a2: 365,
         a3: 346,
         a4: 366,
-        correct: 4
+        correct: 4,
+        correctAnswer: 366
     },
     question2 = {
         q: "Wonderwall is a song by the british band called",
@@ -14,7 +15,8 @@ var questions = [
         a2: "Radiohead",
         a3: "Oasis",
         a4: "The Beatles",
-        correct: 3
+        correct: 3,
+        correctAnswer: "Oasis"
     },
     question3 = {
         q: "Keanu Reeves did not played a role in",
@@ -22,6 +24,7 @@ var questions = [
         a2: "John Wick",
         a3: "Heat",
         a4: "Constantine",
+        correctAnswer: "Heat",
         correct: 3
     },
     question4 = {
@@ -30,6 +33,7 @@ var questions = [
         a2: "Peru",
         a3: "Argentina",
         a4: "Bolivia",
+        correctAnswer: "Peru",
         correct: 2
     },
     question5 = {
@@ -38,6 +42,7 @@ var questions = [
         a2: "Basketball",
         a3: "Soccer",
         a4: "Golf",
+        correctAnswer: "Basketball",
         correct: 2
     },
     question6 = {
@@ -46,6 +51,7 @@ var questions = [
         a2: "2.61828182846",
         a3: "2.71828182846",
         a4: "3.71828182846",
+        correctAnswer: "2.71828182846",
         correct: 3
     },
     question7 = {
@@ -54,6 +60,7 @@ var questions = [
         a2: "Ireland",
         a3: "Scotland",
         a4: "England",
+        correctAnswer: "Ireland",
         correct: 2
     },
     question8 = {
@@ -62,29 +69,59 @@ var questions = [
         a2: "64.03 * 6",
         a3: "32.57 * 100",
         a4: "none of the above",
+        correctAnswer: "65.15 * 5",
         correct: 1
     },
 ];
 
 var counter = 0;
 var answer = 0;
+var unanswered = 0;
 var correctAnswer = 0;
 var incorrectAnswers = 0;
-// hide questions
+var timerCD = 10;
+
+//timer section
+//var timerFunction;
+var intervalTimer;
+
+function timerFunction() {
+    intervalTimer = setInterval(function () {
+        if (timerCD < 0) {
+            outTimeFunction();
+            clearInterval(intervalTimer);
+        } else {
+            $('.timerCountDown').text(timerCD);
+            timerCD--;
+        }
+
+    }, 1000);
+}
+
+
+
+// start screen
+$('#correctAnswerArticle').css('display', 'none');
 $('#questionArticle').css('display', 'none');
 $('#scoreBoard').css('display', 'none');
+$('#start').css('display', 'block');
+
 // start the game and hide screens
 $('.btnStart').on('click', function () {
-    $('#start').css('display', 'none');
-    $('#scoreBoard').css('display', 'none');
+    $('#correctAnswerArticle').css('display', 'none');
     $('#questionArticle').css('display', 'block');
+    $('#scoreBoard').css('display', 'none');
+    $('#start').css('display', 'none');
 
     //restart the counters
+    timerCD = 10;
     counter = 0;
     answer = 0;
     correctAnswer = 0;
     incorrectAnswers = 0;
+    unanswered = 0;
 
+    timerFunction();
 
     $('#question').text(questions[counter].q);
     $('#a1').text(questions[counter].a1);
@@ -95,21 +132,130 @@ $('.btnStart').on('click', function () {
 })
 
 
-function checkAnswer() {
+//validating answers
+// timer number 2
+var timerShowingScreen;
 
-    if (answer === questions[counter].correct) {
-
-        correctAnswer++;
-
-        console.log(correctAnswer + " correct");
-    } else {
-
-        incorrectAnswers++;
-
-        console.log(incorrectAnswers + "wrong");
-    }
+function outTimeFunction() {
 
     counter++;
+    unanswered++;
+
+    if (counter < questions.length) {
+
+        $('#correctAnswerArticle').css('display', 'block');
+        $('#questionArticle').css('display', 'none');
+        $('#scoreBoard').css('display', 'none');
+        $('#start').css('display', 'none');
+
+        $('.answerResult').text("Out of Time!");
+        $('.correting').text("The correct answer was: " + questions[counter - 1].correctAnswer);
+
+        timerCD = 10;
+
+        timerShowingScreen = setInterval(function () {
+
+                changeQuestion();
+                timerFunction();
+
+                $('#correctAnswerArticle').css('display', 'none');
+                $('#questionArticle').css('display', 'block');
+                $('#scoreBoard').css('display', 'none');
+                $('#start').css('display', 'none');
+
+                clearInterval(timerShowingScreen);
+            },
+            3000);
+
+    } else {
+        scoreBoard();
+    }
+}
+
+function correctAnswerFunction() {
+
+    counter++;
+
+    if (counter < questions.length) {
+
+        $('#correctAnswerArticle').css('display', 'block');
+        $('#questionArticle').css('display', 'none');
+        $('#scoreBoard').css('display', 'none');
+        $('#start').css('display', 'none');
+
+        $('.answerResult').text("Correct !");
+        $('.correting').text(" ");
+
+        timerShowingScreen = setInterval(function () {
+
+                timerCD = 10;
+
+                changeQuestion();
+                timerFunction();
+
+                $('#correctAnswerArticle').css('display', 'none');
+                $('#questionArticle').css('display', 'block');
+                $('#scoreBoard').css('display', 'none');
+                $('#start').css('display', 'none');
+
+                clearInterval(timerShowingScreen);
+            },
+            3000);
+    } else {
+        scoreBoard();
+    }
+}
+
+function incorrectAnswerFunction() {
+
+    counter++;
+
+    if (counter < questions.length) {
+
+        $('#correctAnswerArticle').css('display', 'block');
+        $('#questionArticle').css('display', 'none');
+        $('#scoreBoard').css('display', 'none');
+        $('#start').css('display', 'none');
+
+        $('.answerResult').text("Nope!");
+        $('.correting').text("The correct answer is: " + questions[counter - 1].correctAnswer);
+
+        timerShowingScreen = setInterval(function () {
+                timerCD = 10;
+
+                changeQuestion();
+                timerFunction();
+
+                $('#correctAnswerArticle').css('display', 'none');
+                $('#questionArticle').css('display', 'block');
+                $('#scoreBoard').css('display', 'none');
+                $('#start').css('display', 'none');
+
+                clearInterval(timerShowingScreen);
+            },
+            3000);
+
+    } else {
+        scoreBoard();
+    }
+}
+
+function checkAnswer() {
+    clearInterval(intervalTimer);
+
+    if (answer === questions[counter].correct) {
+        correctAnswer++;
+        correctAnswerFunction();
+    } else {
+        incorrectAnswers++;
+        incorrectAnswerFunction();
+    }
+    // timerCD = 10;
+    // changeQuestion();
+}
+
+//Update questions in the DOM
+function changeQuestion() {
 
     if (counter < questions.length) {
         $('#question').text(questions[counter].q);
@@ -122,15 +268,24 @@ function checkAnswer() {
     }
 }
 
+
 function scoreBoard() {
     console.log("you called the scoreboard ");
 
+    $(".correctAnswers").text("Correct Answers: " + correctAnswer);
+    $(".incorrectAnswers").text("Incorrect Answers: " + incorrectAnswers);
+    $(".unanswered").text("Unanswered Questions: " + unanswered);
 
 
+    $('#correctAnswerArticle').css('display', 'none');
     $('#questionArticle').css('display', 'none');
     $('#scoreBoard').css('display', 'block');
+    $('#start').css('display', 'none');
+
 }
 
+
+//buttons pressed
 $('#btnA1').on('click', function () {
     answer = 1;
     checkAnswer();

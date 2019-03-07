@@ -6,9 +6,11 @@ article {
     border: solid 2px #000000;
 }
 
-#que{
-    
+.timerCountDown {
+    padding: 5px;
+    border: solid 1px #000000;
+    background-color: #f54b4b69;
+    font-weight: bold;
+    border-radius: 5px;
 }
-.breaking{
 
-}
